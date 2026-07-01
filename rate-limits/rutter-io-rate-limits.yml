@@ -1,0 +1,64 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Rutter
+providerId: rutter-io
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Unified API
+- Accounting
+- Commerce
+- Payments
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Rutter applies rate limits at the application (client) and connection level
+  to protect both the Rutter platform and the underlying third-party
+  platforms it integrates with (QuickBooks, Shopify, Stripe, etc.). Because
+  many downstream platforms impose their own strict per-account limits,
+  large historical pulls are performed asynchronously and surfaced via
+  webhooks rather than being read synchronously. Specific per-endpoint
+  numeric limits are not published and are not reconciled in this artifact.
+notes: >-
+  Downstream platform limits (e.g. QuickBooks, Shopify) are the binding
+  constraint for many sync operations. Verify current limits and recommended
+  backoff behavior with Rutter during reconciliation.
+sources:
+- https://docs.rutterapi.com/docs/introduction
+- https://docs.rutterapi.com/docs/webhooks
+responseCodes:
+  throttled: 429
+limits:
+- name: Application Request Rate
+  scope: application
+  metric: requests
+  limit: see provider documentation
+  notes: Per-client request rate across all connections; not publicly numeric.
+- name: Per-Connection Request Rate
+  scope: connection
+  metric: requests
+  limit: see provider documentation
+  notes: Requests scoped to a single connection access_token.
+- name: Downstream Platform Limits
+  scope: connection
+  metric: requests
+  limit: bound by underlying platform
+  notes: QuickBooks, Xero, Shopify, Stripe, etc. each impose their own per-account limits that can throttle Rutter reads/writes.
+- name: Initial Sync
+  scope: connection
+  metric: jobs
+  limit: asynchronous
+  notes: Historical backfills run async; completion is signaled via webhook rather than a synchronous response.
+policies:
+- name: Async Sync via Webhooks
+  description: Large historical data pulls are performed asynchronously; clients should wait for sync webhooks before reading full datasets.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor 429 responses and any Retry-After header.
+- name: Cursor Pagination
+  description: List endpoints are cursor-paginated (next_cursor); page through results rather than requesting large limits.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

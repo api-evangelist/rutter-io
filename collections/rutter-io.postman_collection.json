@@ -1,0 +1,367 @@
+{
+  "info": {
+    "name": "Rutter Unified API",
+    "description": "Rutter is a unified API for commerce, accounting, and payments. Requests use HTTP Basic auth (client_id:secret), an X-Rutter-Version header, and a connection access_token query parameter for data endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{clientId}}", "type": "string" },
+      { "key": "password", "value": "{{secret}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://production.rutterapi.com/versioned" },
+    { "key": "rutterVersion", "value": "2023-03-14" },
+    { "key": "clientId", "value": "" },
+    { "key": "secret", "value": "" },
+    { "key": "accessToken", "value": "" },
+    { "key": "publicToken", "value": "" },
+    { "key": "connectionId", "value": "" },
+    { "key": "webhookId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Connections",
+      "item": [
+        {
+          "name": "Exchange a public token for an access token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/connections/access_token",
+              "host": ["{{baseUrl}}"],
+              "path": ["connections", "access_token"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"public_token\": \"{{publicToken}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "List connections",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/connections",
+              "host": ["{{baseUrl}}"],
+              "path": ["connections"]
+            }
+          }
+        },
+        {
+          "name": "Get a connection",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/connections/{{connectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["connections", "{{connectionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete a connection",
+          "request": {
+            "method": "DELETE",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/connections/{{connectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["connections", "{{connectionId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounting",
+      "item": [
+        {
+          "name": "List accounts",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/accounts?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "accounts"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List ledger accounts",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/ledger_accounts?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "ledger_accounts"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List journal entries",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/journal_entries?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "journal_entries"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "Create a journal entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/journal_entries?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "journal_entries"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"journal_entry\": {\n    \"transaction_date\": \"2026-07-01\",\n    \"currency_code\": \"USD\",\n    \"line_items\": []\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "List invoices",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/invoices?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "invoices"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List bills",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/bills?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "bills"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List accounting payments",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/payments?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "payments"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List accounting transactions",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/accounting/transactions?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["accounting", "transactions"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Commerce",
+      "item": [
+        {
+          "name": "List orders",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/commerce/orders?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["commerce", "orders"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List products",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/commerce/products?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["commerce", "products"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/commerce/customers?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["commerce", "customers"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List commerce transactions",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/commerce/transactions?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["commerce", "transactions"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "List payments",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/payments?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "payments"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List payouts",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/payouts?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "payouts"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List balances",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/balances?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "balances"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        },
+        {
+          "name": "List payment transactions",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/transactions?access_token={{accessToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "transactions"],
+              "query": [ { "key": "access_token", "value": "{{accessToken}}" } ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "List webhooks",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhooks"]
+            }
+          }
+        },
+        {
+          "name": "Create a webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhooks"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://example.com/rutter/webhook\",\n  \"enabled_events\": [\"INITIAL_SYNC_FINISHED\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Delete a webhook",
+          "request": {
+            "method": "DELETE",
+            "header": [ { "key": "X-Rutter-Version", "value": "{{rutterVersion}}" } ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks/{{webhookId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhooks", "{{webhookId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

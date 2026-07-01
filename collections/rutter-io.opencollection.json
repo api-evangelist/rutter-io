@@ -1,0 +1,327 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Rutter Unified API",
+    "version": "2023-03-14"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{clientId}}",
+      "password": "{{secret}}"
+    },
+    "headers": [
+      {
+        "name": "X-Rutter-Version",
+        "value": "{{rutterVersion}}"
+      }
+    ]
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Connections",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Exchange a public token for an access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://production.rutterapi.com/versioned/connections/access_token",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"public_token\": \"{{publicToken}}\"\n}"
+            }
+          },
+          "docs": "Exchange the public_token returned by Rutter Link for a permanent connection access_token."
+        },
+        {
+          "info": {
+            "name": "List connections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/connections"
+          },
+          "docs": "List all connections created under your Rutter application."
+        },
+        {
+          "info": {
+            "name": "Get a connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/connections/{{connectionId}}"
+          },
+          "docs": "Retrieve metadata for a single connection by id."
+        },
+        {
+          "info": {
+            "name": "Delete a connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://production.rutterapi.com/versioned/connections/{{connectionId}}"
+          },
+          "docs": "Delete a connection and revoke its access token."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Accounting",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/accounts?access_token={{accessToken}}"
+          },
+          "docs": "List the bank/financial accounts for the connected accounting platform."
+        },
+        {
+          "info": {
+            "name": "List ledger accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/ledger_accounts?access_token={{accessToken}}"
+          },
+          "docs": "List the ledger accounts (chart of accounts)."
+        },
+        {
+          "info": {
+            "name": "List journal entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/journal_entries?access_token={{accessToken}}"
+          },
+          "docs": "List journal entries."
+        },
+        {
+          "info": {
+            "name": "Create a journal entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://production.rutterapi.com/versioned/accounting/journal_entries?access_token={{accessToken}}",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"journal_entry\": {\n    \"transaction_date\": \"2026-07-01\",\n    \"currency_code\": \"USD\",\n    \"line_items\": []\n  }\n}"
+            }
+          },
+          "docs": "Write a journal entry back to the connected accounting platform."
+        },
+        {
+          "info": {
+            "name": "List invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/invoices?access_token={{accessToken}}"
+          },
+          "docs": "List invoices."
+        },
+        {
+          "info": {
+            "name": "List bills",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/bills?access_token={{accessToken}}"
+          },
+          "docs": "List bills."
+        },
+        {
+          "info": {
+            "name": "List accounting payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/payments?access_token={{accessToken}}"
+          },
+          "docs": "List accounting payments."
+        },
+        {
+          "info": {
+            "name": "List accounting transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/accounting/transactions?access_token={{accessToken}}"
+          },
+          "docs": "List bank/ledger transactions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Commerce",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/commerce/orders?access_token={{accessToken}}"
+          },
+          "docs": "List orders from the connected commerce or marketplace platform."
+        },
+        {
+          "info": {
+            "name": "List products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/commerce/products?access_token={{accessToken}}"
+          },
+          "docs": "List products."
+        },
+        {
+          "info": {
+            "name": "List customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/commerce/customers?access_token={{accessToken}}"
+          },
+          "docs": "List customers."
+        },
+        {
+          "info": {
+            "name": "List commerce transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/commerce/transactions?access_token={{accessToken}}"
+          },
+          "docs": "List commerce transactions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/payments/payments?access_token={{accessToken}}"
+          },
+          "docs": "List payments from the connected payment processor."
+        },
+        {
+          "info": {
+            "name": "List payouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/payments/payouts?access_token={{accessToken}}"
+          },
+          "docs": "List payouts."
+        },
+        {
+          "info": {
+            "name": "List balances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/payments/balances?access_token={{accessToken}}"
+          },
+          "docs": "List processor balances."
+        },
+        {
+          "info": {
+            "name": "List payment transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/payments/transactions?access_token={{accessToken}}"
+          },
+          "docs": "List payment transactions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://production.rutterapi.com/versioned/webhooks"
+          },
+          "docs": "List registered webhooks."
+        },
+        {
+          "info": {
+            "name": "Create a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://production.rutterapi.com/versioned/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"url\": \"https://example.com/rutter/webhook\",\n  \"enabled_events\": [\"INITIAL_SYNC_FINISHED\"]\n}"
+            }
+          },
+          "docs": "Register a webhook endpoint."
+        },
+        {
+          "info": {
+            "name": "Delete a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://production.rutterapi.com/versioned/webhooks/{{webhookId}}"
+          },
+          "docs": "Delete a webhook."
+        }
+      ]
+    }
+  ]
+}

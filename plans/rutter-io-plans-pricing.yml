@@ -1,0 +1,132 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Rutter
+providerId: rutter-io
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Unified API
+- Accounting
+- Commerce
+- Payments
+- Business Data
+- Integrations
+- Plans
+description: >-
+  Rutter does not publish self-serve, tiered public pricing. Pricing is
+  sales-quoted and generally structured around the number of connected
+  end-users (merchant connections) and the product areas used (Accounting,
+  Commerce, Payments), plus usage of writes and platform coverage. Developers
+  can build against the free sandbox before signing a commercial agreement.
+notes: >-
+  No public price list. Values below describe the shape of the commercial
+  model, not confirmed rate cards. Confirm current terms with Rutter sales.
+sources:
+- https://www.rutter.com/pricing
+- https://www.rutter.com
+- https://docs.rutterapi.com/docs/introduction
+plans:
+- id: rutter-io-sandbox
+  name: Sandbox
+  type: free
+  description: >-
+    Free sandbox environment for building and testing against Rutter's
+    unified endpoints before going to production.
+  entries:
+  - label: Sandbox Connections
+    name: sandbox_connections
+    type: free
+    metric: connections
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Sandbox Environment
+  - name: Rutter Link (test mode)
+  - name: All Product APIs (test data)
+- id: rutter-io-production
+  name: Production (Sales-Quoted)
+  type: usage
+  description: >-
+    Production access under a commercial agreement. Pricing is quoted by
+    Rutter sales and typically scales with the number of connected end-users
+    and the product areas enabled.
+  entries:
+  - label: Connected End-Users
+    name: connections
+    type: usage
+    metric: connections
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales (per-connection based)
+    userMultiplied: true
+  - label: Accounting Product
+    name: product_accounting
+    type: usage
+    metric: connections
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  - label: Commerce Product
+    name: product_commerce
+    type: usage
+    metric: connections
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  - label: Payments Product
+    name: product_payments
+    type: usage
+    metric: connections
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Connections
+  - name: Accounting API
+  - name: Commerce API
+  - name: Payments API
+  - name: Webhooks
+  - name: Write-back Endpoints
+- id: rutter-io-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Volume commitments, expanded platform coverage, dedicated support,
+    security review, and negotiated terms for larger deployments. Contact
+    Rutter sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: Expanded Platform Coverage
+  - name: Dedicated Support
+  - name: Security and Compliance Review
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

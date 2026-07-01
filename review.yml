@@ -1,0 +1,80 @@
+aid: rutter-io
+name: Rutter
+review:
+  question: Does Rutter expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-01'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    Rutter delivers asynchronous notifications via HTTP webhooks, not via a
+    streaming transport. Webhooks are ordinary HTTPS POST callbacks to a
+    developer-registered URL and are modeled here as REST endpoints in the
+    OpenAPI document, not as an AsyncAPI channel. No Server-Sent Events (SSE)
+    or WebSocket surface is documented, so no AsyncAPI document was created.
+findings:
+  summary: |
+    Rutter does not publish a documented public WebSocket API. The Rutter
+    Unified API is a REST (HTTPS) API served from
+    https://production.rutterapi.com/versioned (and a sandbox host).
+    Requests use HTTP Basic auth with client_id:secret, an X-Rutter-Version
+    header, and a connection access_token query parameter. Asynchronous
+    events (initial sync completion, data create/update) are delivered as
+    signed HTTP webhook callbacks, not over WebSocket or SSE. No realtime,
+    bidirectional, ws:// or wss:// endpoint is documented.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://production.rutterapi.com/versioned
+      documented: true
+    - protocol: Webhook
+      scheme: https
+      note: Asynchronous events delivered as signed HTTPS POST callbacks to a registered URL. Not WebSocket or SSE.
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in Rutter's API reference for connections, accounting, commerce, payments, or webhooks as of the review date.
+  endpointsConfirmedRest:
+    - POST   https://production.rutterapi.com/versioned/connections/access_token
+    - GET    https://production.rutterapi.com/versioned/connections
+    - GET    https://production.rutterapi.com/versioned/connections/{id}
+    - DELETE https://production.rutterapi.com/versioned/connections/{id}
+    - GET    https://production.rutterapi.com/versioned/accounting/accounts
+    - GET    https://production.rutterapi.com/versioned/accounting/ledger_accounts
+    - GET    https://production.rutterapi.com/versioned/accounting/journal_entries
+    - POST   https://production.rutterapi.com/versioned/accounting/journal_entries
+    - GET    https://production.rutterapi.com/versioned/accounting/invoices
+    - POST   https://production.rutterapi.com/versioned/accounting/invoices
+    - GET    https://production.rutterapi.com/versioned/accounting/bills
+    - GET    https://production.rutterapi.com/versioned/accounting/payments
+    - GET    https://production.rutterapi.com/versioned/accounting/transactions
+    - GET    https://production.rutterapi.com/versioned/commerce/orders
+    - GET    https://production.rutterapi.com/versioned/commerce/products
+    - GET    https://production.rutterapi.com/versioned/commerce/customers
+    - GET    https://production.rutterapi.com/versioned/commerce/transactions
+    - GET    https://production.rutterapi.com/versioned/payments/payments
+    - GET    https://production.rutterapi.com/versioned/payments/payouts
+    - GET    https://production.rutterapi.com/versioned/payments/balances
+    - GET    https://production.rutterapi.com/versioned/payments/transactions
+    - GET    https://production.rutterapi.com/versioned/webhooks
+    - POST   https://production.rutterapi.com/versioned/webhooks
+    - DELETE https://production.rutterapi.com/versioned/webhooks/{id}
+sources:
+  - url: https://docs.rutterapi.com/docs/introduction
+    type: Documentation
+    note: Overview describes a REST unified API with Basic auth + X-Rutter-Version; no WebSocket mentioned.
+  - url: https://docs.rutterapi.com/reference/get-connection
+    type: APIReference
+    note: All documented endpoints are HTTPS REST.
+  - url: https://docs.rutterapi.com/docs/webhooks
+    type: Documentation
+    note: Asynchronous events are delivered via HTTP webhooks, not WebSocket or SSE.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket or SSE protocol surface exists. Rutter's asynchronous
+    delivery is HTTP webhooks, which are modeled as REST endpoints in the
+    OpenAPI document. No AsyncAPI document was authored because there is no
+    streaming (SSE/WebSocket) transport to represent.
