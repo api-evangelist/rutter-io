@@ -114,6 +114,10 @@ apis:
     notifications when a connection finishes its initial sync or when underlying data
     (orders, invoices, payments) is created or updated.
 common:
+- type: DomainSecurity
+  url: security/rutter-io-domain-security.yml
+- type: Authentication
+  url: authentication/rutter-io-authentication.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/rutter-api
 - type: Website
@@ -126,6 +130,8 @@ common:
   url: rate-limits/rutter-io-rate-limits.yml
 - type: FinOps
   url: finops/rutter-io-finops.yml
+- type: Blog
+  url: https://www.rutter.com/blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/rutter-io-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic auth. Username is your Rutter client_id, password is your Rutter secret.
+    Requests must also include the `X-Rutter-Version` header and, for data endpoints, the `access_token`
+    query parameter.
+  sources:
+  - openapi/rutter-io-openapi.yml
