@@ -1,0 +1,14 @@
+{
+  "repo": "rutter-io",
+  "feeds": [
+    {
+      "source": "https://www.rutter.com/blog",
+      "feed_url": "https://www.rutter.com/blog",
+      "title": "Rutter Blog",
+      "saved": 0,
+      "error": "parse_failed"
+    }
+  ],
+  "fetched": "2026-07-11T11:43:46Z",
+  "post_count": 25
+}
