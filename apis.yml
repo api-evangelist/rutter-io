@@ -114,6 +114,8 @@ apis:
     notifications when a connection finishes its initial sync or when underlying data
     (orders, invoices, payments) is created or updated.
 common:
+- type: AgenticAccess
+  url: agentic-access/rutter-io-agentic-access.yml
 - type: DomainSecurity
   url: security/rutter-io-domain-security.yml
 - type: Authentication
