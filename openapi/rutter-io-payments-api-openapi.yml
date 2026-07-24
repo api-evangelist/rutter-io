@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: Rutter Unified Accounting Payments API
+  description: 'Rutter is a unified API for commerce, accounting, and payments. A single integration reads and writes normalized business data across QuickBooks, Xero, NetSuite, Sage Intacct, Shopify, Amazon, Stripe, and other platforms.
+
+    All requests are authenticated with HTTP Basic auth using your Rutter client_id as the username and secret as the password, and must include an `X-Rutter-Version` header pinning the API version (date-based, e.g. `2023-03-14`). Every data request is scoped to a specific end-user connection using the `access_token` query parameter obtained by exchanging a public token from Rutter Link.'
+  termsOfService: https://www.rutter.com/legal/terms-of-service
+  contact:
+    name: Rutter Support
+    email: support@rutter.com
+    url: https://docs.rutterapi.com
+  version: '2023-03-14'
+servers:
+- url: https://production.rutterapi.com/versioned
+  description: Production
+- url: https://sandbox.rutterapi.com/versioned
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Payments
+  description: Normalized payment-processor data - payments, payouts, balances, transactions.
+paths:
+  /payments/payments:
+    get:
+      operationId: listPayments
+      tags:
+      - Payments
+      summary: List payments
+      description: List payments from the connected payment processor.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of payments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /payments/payouts:
+    get:
+      operationId: listPayouts
+      tags:
+      - Payments
+      summary: List payouts
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of payouts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payouts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payout'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /payments/balances:
+    get:
+      operationId: listBalances
+      tags:
+      - Payments
+      summary: List balances
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      responses:
+        '200':
+          description: The processor balances.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balances:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Balance'
+  /payments/transactions:
+    get:
+      operationId: listPaymentTransactions
+      tags:
+      - Payments
+      summary: List payment transactions
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of payment transactions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PaymentTransaction'
+                  next_cursor:
+                    type: string
+                    nullable: true
+components:
+  schemas:
+    PaymentTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        payment_id:
+          type: string
+          nullable: true
+        payout_id:
+          type: string
+          nullable: true
+        type:
+          type: string
+        amount:
+          type: number
+        fee:
+          type: number
+          nullable: true
+        currency_code:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Payout:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        amount:
+          type: number
+        currency_code:
+          type: string
+        status:
+          type: string
+        arrival_date:
+          type: string
+          format: date
+          nullable: true
+    Balance:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        available_amount:
+          type: number
+        pending_amount:
+          type: number
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        amount:
+          type: number
+        currency_code:
+          type: string
+        status:
+          type: string
+        customer_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+  parameters:
+    RutterVersion:
+      name: X-Rutter-Version
+      in: header
+      required: true
+      description: Date-based API version to pin (e.g. 2023-03-14).
+      schema:
+        type: string
+        example: '2023-03-14'
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Opaque cursor for pagination, returned as next_cursor.
+      schema:
+        type: string
+    AccessToken:
+      name: access_token
+      in: query
+      required: true
+      description: The connection access token that scopes the request to one end user.
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of records to return per page.
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth. Username is your Rutter client_id, password is your Rutter secret. Requests must also include the `X-Rutter-Version` header and, for data endpoints, the `access_token` query parameter.

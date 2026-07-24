@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: Rutter Unified Accounting Connections API
+  description: 'Rutter is a unified API for commerce, accounting, and payments. A single integration reads and writes normalized business data across QuickBooks, Xero, NetSuite, Sage Intacct, Shopify, Amazon, Stripe, and other platforms.
+
+    All requests are authenticated with HTTP Basic auth using your Rutter client_id as the username and secret as the password, and must include an `X-Rutter-Version` header pinning the API version (date-based, e.g. `2023-03-14`). Every data request is scoped to a specific end-user connection using the `access_token` query parameter obtained by exchanging a public token from Rutter Link.'
+  termsOfService: https://www.rutter.com/legal/terms-of-service
+  contact:
+    name: Rutter Support
+    email: support@rutter.com
+    url: https://docs.rutterapi.com
+  version: '2023-03-14'
+servers:
+- url: https://production.rutterapi.com/versioned
+  description: Production
+- url: https://sandbox.rutterapi.com/versioned
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Connections
+  description: Manage end-user connections created via Rutter Link.
+paths:
+  /connections/access_token:
+    post:
+      operationId: exchangePublicToken
+      tags:
+      - Connections
+      summary: Exchange a public token for a connection access token
+      description: Exchange the `public_token` returned by Rutter Link for a permanent connection `access_token` used to scope subsequent data requests.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - public_token
+              properties:
+                public_token:
+                  type: string
+                  description: The public token returned from Rutter Link.
+      responses:
+        '200':
+          description: The exchanged connection access token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  connection:
+                    $ref: '#/components/schemas/Connection'
+  /connections:
+    get:
+      operationId: listConnections
+      tags:
+      - Connections
+      summary: List connections
+      description: List all connections created under your Rutter application.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of connections.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connections:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Connection'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /connections/{id}:
+    get:
+      operationId: getConnection
+      tags:
+      - Connections
+      summary: Get a connection
+      description: Retrieve metadata for a single connection by its Rutter id.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The requested connection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connection:
+                    $ref: '#/components/schemas/Connection'
+    delete:
+      operationId: deleteConnection
+      tags:
+      - Connections
+      summary: Delete a connection
+      description: Delete a connection and revoke its access token.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The connection was deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+components:
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Opaque cursor for pagination, returned as next_cursor.
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of records to return per page.
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    RutterVersion:
+      name: X-Rutter-Version
+      in: header
+      required: true
+      description: Date-based API version to pin (e.g. 2023-03-14).
+      schema:
+        type: string
+        example: '2023-03-14'
+  schemas:
+    Connection:
+      type: object
+      properties:
+        id:
+          type: string
+        platform:
+          type: string
+          description: The underlying platform, e.g. QUICKBOOKS, SHOPIFY, STRIPE.
+        access_token:
+          type: string
+        last_synced_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth. Username is your Rutter client_id, password is your Rutter secret. Requests must also include the `X-Rutter-Version` header and, for data endpoints, the `access_token` query parameter.

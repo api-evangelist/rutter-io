@@ -1,0 +1,479 @@
+openapi: 3.0.3
+info:
+  title: Rutter Unified Accounting API
+  description: 'Rutter is a unified API for commerce, accounting, and payments. A single integration reads and writes normalized business data across QuickBooks, Xero, NetSuite, Sage Intacct, Shopify, Amazon, Stripe, and other platforms.
+
+    All requests are authenticated with HTTP Basic auth using your Rutter client_id as the username and secret as the password, and must include an `X-Rutter-Version` header pinning the API version (date-based, e.g. `2023-03-14`). Every data request is scoped to a specific end-user connection using the `access_token` query parameter obtained by exchanging a public token from Rutter Link.'
+  termsOfService: https://www.rutter.com/legal/terms-of-service
+  contact:
+    name: Rutter Support
+    email: support@rutter.com
+    url: https://docs.rutterapi.com
+  version: '2023-03-14'
+servers:
+- url: https://production.rutterapi.com/versioned
+  description: Production
+- url: https://sandbox.rutterapi.com/versioned
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Accounting
+  description: Normalized accounting data - accounts, ledger accounts, journal entries, invoices, bills, payments, expenses, transactions.
+paths:
+  /accounting/accounts:
+    get:
+      operationId: listAccounts
+      tags:
+      - Accounting
+      summary: List bank accounts
+      description: List the bank/financial accounts for the connected accounting platform.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of accounts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accounts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Account'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /accounting/ledger_accounts:
+    get:
+      operationId: listLedgerAccounts
+      tags:
+      - Accounting
+      summary: List ledger accounts (chart of accounts)
+      description: List the ledger accounts (chart of accounts) for the connected accounting platform.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of ledger accounts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ledger_accounts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LedgerAccount'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /accounting/journal_entries:
+    get:
+      operationId: listJournalEntries
+      tags:
+      - Accounting
+      summary: List journal entries
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of journal entries.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  journal_entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JournalEntry'
+                  next_cursor:
+                    type: string
+                    nullable: true
+    post:
+      operationId: createJournalEntry
+      tags:
+      - Accounting
+      summary: Create a journal entry
+      description: Write a journal entry back to the connected accounting platform.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                journal_entry:
+                  $ref: '#/components/schemas/JournalEntry'
+      responses:
+        '200':
+          description: The created journal entry.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  journal_entry:
+                    $ref: '#/components/schemas/JournalEntry'
+  /accounting/invoices:
+    get:
+      operationId: listInvoices
+      tags:
+      - Accounting
+      summary: List invoices
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of invoices.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invoices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoice'
+                  next_cursor:
+                    type: string
+                    nullable: true
+    post:
+      operationId: createInvoice
+      tags:
+      - Accounting
+      summary: Create an invoice
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invoice:
+                  $ref: '#/components/schemas/Invoice'
+      responses:
+        '200':
+          description: The created invoice.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invoice:
+                    $ref: '#/components/schemas/Invoice'
+  /accounting/bills:
+    get:
+      operationId: listBills
+      tags:
+      - Accounting
+      summary: List bills
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of bills.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bills:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bill'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /accounting/payments:
+    get:
+      operationId: listAccountingPayments
+      tags:
+      - Accounting
+      summary: List accounting payments
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of accounting payments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccountingPayment'
+                  next_cursor:
+                    type: string
+                    nullable: true
+  /accounting/transactions:
+    get:
+      operationId: listAccountingTransactions
+      tags:
+      - Accounting
+      summary: List accounting transactions
+      description: List bank/ledger transactions from the connected accounting platform.
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - $ref: '#/components/parameters/AccessToken'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A paginated list of accounting transactions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccountingTransaction'
+                  next_cursor:
+                    type: string
+                    nullable: true
+components:
+  schemas:
+    LineItem:
+      type: object
+      properties:
+        description:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+        unit_amount:
+          type: number
+        total_amount:
+          type: number
+        ledger_account_id:
+          type: string
+          nullable: true
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        currency_code:
+          type: string
+        balance:
+          type: number
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        customer_id:
+          type: string
+          nullable: true
+        issue_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+        total_amount:
+          type: number
+        currency_code:
+          type: string
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+    LedgerAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        name:
+          type: string
+        nominal_code:
+          type: string
+          nullable: true
+        classification:
+          type: string
+          description: Asset, Liability, Equity, Revenue, or Expense.
+        status:
+          type: string
+        current_balance:
+          type: number
+        currency_code:
+          type: string
+    AccountingTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        account_id:
+          type: string
+          nullable: true
+        posted_date:
+          type: string
+          format: date
+        amount:
+          type: number
+        currency_code:
+          type: string
+        description:
+          type: string
+          nullable: true
+    Bill:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        vendor_id:
+          type: string
+          nullable: true
+        issue_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+        total_amount:
+          type: number
+        currency_code:
+          type: string
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+    JournalEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        transaction_date:
+          type: string
+          format: date
+        memo:
+          type: string
+          nullable: true
+        currency_code:
+          type: string
+        line_items:
+          type: array
+          items:
+            type: object
+            properties:
+              ledger_account_id:
+                type: string
+              description:
+                type: string
+                nullable: true
+              net_amount:
+                type: number
+              type:
+                type: string
+                enum:
+                - DEBIT
+                - CREDIT
+    AccountingPayment:
+      type: object
+      properties:
+        id:
+          type: string
+        platform_id:
+          type: string
+        account_id:
+          type: string
+          nullable: true
+        payment_date:
+          type: string
+          format: date
+        amount:
+          type: number
+        currency_code:
+          type: string
+        type:
+          type: string
+          description: e.g. ACCOUNTS_RECEIVABLE or ACCOUNTS_PAYABLE.
+  parameters:
+    RutterVersion:
+      name: X-Rutter-Version
+      in: header
+      required: true
+      description: Date-based API version to pin (e.g. 2023-03-14).
+      schema:
+        type: string
+        example: '2023-03-14'
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Opaque cursor for pagination, returned as next_cursor.
+      schema:
+        type: string
+    AccessToken:
+      name: access_token
+      in: query
+      required: true
+      description: The connection access token that scopes the request to one end user.
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of records to return per page.
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth. Username is your Rutter client_id, password is your Rutter secret. Requests must also include the `X-Rutter-Version` header and, for data endpoints, the `access_token` query parameter.

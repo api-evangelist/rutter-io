@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: Rutter Unified Accounting Webhooks API
+  description: 'Rutter is a unified API for commerce, accounting, and payments. A single integration reads and writes normalized business data across QuickBooks, Xero, NetSuite, Sage Intacct, Shopify, Amazon, Stripe, and other platforms.
+
+    All requests are authenticated with HTTP Basic auth using your Rutter client_id as the username and secret as the password, and must include an `X-Rutter-Version` header pinning the API version (date-based, e.g. `2023-03-14`). Every data request is scoped to a specific end-user connection using the `access_token` query parameter obtained by exchanging a public token from Rutter Link.'
+  termsOfService: https://www.rutter.com/legal/terms-of-service
+  contact:
+    name: Rutter Support
+    email: support@rutter.com
+    url: https://docs.rutterapi.com
+  version: '2023-03-14'
+servers:
+- url: https://production.rutterapi.com/versioned
+  description: Production
+- url: https://sandbox.rutterapi.com/versioned
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Webhooks
+  description: Register and manage webhook endpoints for sync and data events.
+paths:
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      tags:
+      - Webhooks
+      summary: List webhooks
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      responses:
+        '200':
+          description: A list of registered webhooks.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+    post:
+      operationId: createWebhook
+      tags:
+      - Webhooks
+      summary: Create a webhook
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                enabled_events:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: The created webhook.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook:
+                    $ref: '#/components/schemas/Webhook'
+  /webhooks/{id}:
+    delete:
+      operationId: deleteWebhook
+      tags:
+      - Webhooks
+      summary: Delete a webhook
+      parameters:
+      - $ref: '#/components/parameters/RutterVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The webhook was deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+components:
+  parameters:
+    RutterVersion:
+      name: X-Rutter-Version
+      in: header
+      required: true
+      description: Date-based API version to pin (e.g. 2023-03-14).
+      schema:
+        type: string
+        example: '2023-03-14'
+  schemas:
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        enabled_events:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth. Username is your Rutter client_id, password is your Rutter secret. Requests must also include the `X-Rutter-Version` header and, for data endpoints, the `access_token` query parameter.
