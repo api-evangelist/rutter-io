@@ -7,7 +7,20 @@ description: Rutter is a unified API for commerce, accounting, and payments. Dev
   NetSuite, Sage Intacct, Shopify, Amazon, Stripe, and dozens of other platforms.
   Rutter authenticates with Basic auth (client_id:secret) and an X-Rutter-Version
   header, and scopes each request to an end-user's connection via an access_token.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/rutter-io.png
 tags:
 - Unified API
 - Accounting
@@ -19,100 +32,158 @@ created: '2026-07-01'
 modified: '2026-07-01'
 specificationVersion: '0.19'
 apis:
-- aid: rutter-io:rutter-io-connections-api
-  name: Rutter Connections API
-  tags:
-  - Connections
-  - OAuth
-  - Link
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.rutterapi.com/reference/get-connection
-  baseURL: https://production.rutterapi.com/versioned
-  properties:
-  - url: https://docs.rutterapi.com/docs/introduction
-    type: Documentation
-  - url: https://docs.rutterapi.com/reference/get-connection
-    type: APIReference
-  - url: openapi/rutter-io-openapi.yml
-    type: OpenAPI
-  description: Manage the end-user connections that link a merchant's underlying platform
-    (QuickBooks, Shopify, Stripe, etc.) to your app. Exchange a public token for a
-    connection access_token, fetch connection metadata, and delete connections.
 - aid: rutter-io:rutter-io-accounting-api
   name: Rutter Accounting API
+  description: >-
+    Normalized accounting data - accounts, ledger accounts, journal entries, invoices, bills, payments,
+    expenses, transactions.
+  humanURL: https://docs.rutterapi.com/reference/get-connection
+  baseURL: https://production.rutterapi.com/versioned
   tags:
   - Accounting
-  - Ledger
-  - Journal Entries
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.rutterapi.com/reference/list-accounts
-  baseURL: https://production.rutterapi.com/versioned/accounting
   properties:
-  - url: https://docs.rutterapi.com/docs/accounting
-    type: Documentation
-  - url: https://docs.rutterapi.com/reference/list-accounts
-    type: APIReference
-  - url: openapi/rutter-io-openapi.yml
-    type: OpenAPI
-  description: Normalized read and write access to accounting platforms - bank accounts,
-    ledger accounts (chart of accounts), journal entries, invoices, bills, payments,
-    expenses, and transactions across QuickBooks, Xero, NetSuite, and Sage Intacct.
+  - type: OpenAPI
+    url: openapi/rutter-io-accounting-api-openapi.yml
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/introduction
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/get-connection
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/accounting
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-accounts
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/commerce
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-orders
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/payments
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-payments
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-webhooks
 - aid: rutter-io:rutter-io-commerce-api
   name: Rutter Commerce API
+  description: Normalized commerce data - orders, products, customers, transactions.
+  humanURL: https://docs.rutterapi.com/reference/get-connection
+  baseURL: https://production.rutterapi.com/versioned
   tags:
   - Commerce
-  - Orders
-  - Products
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.rutterapi.com/reference/list-orders
-  baseURL: https://production.rutterapi.com/versioned/commerce
   properties:
-  - url: https://docs.rutterapi.com/docs/commerce
-    type: Documentation
-  - url: https://docs.rutterapi.com/reference/list-orders
-    type: APIReference
-  - url: openapi/rutter-io-openapi.yml
-    type: OpenAPI
-  description: Normalized read access to e-commerce and marketplace platforms - orders,
-    products, customers, and transactions across Shopify, Amazon, WooCommerce, BigCommerce,
-    and other storefronts and marketplaces.
+  - type: OpenAPI
+    url: openapi/rutter-io-commerce-api-openapi.yml
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/introduction
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/get-connection
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/accounting
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-accounts
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/commerce
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-orders
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/payments
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-payments
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-webhooks
+- aid: rutter-io:rutter-io-connections-api
+  name: Rutter Connections API
+  description: Manage end-user connections created via Rutter Link.
+  humanURL: https://docs.rutterapi.com/reference/get-connection
+  baseURL: https://production.rutterapi.com/versioned
+  tags:
+  - Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/rutter-io-connections-api-openapi.yml
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/introduction
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/get-connection
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/accounting
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-accounts
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/commerce
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-orders
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/payments
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-payments
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-webhooks
 - aid: rutter-io:rutter-io-payments-api
   name: Rutter Payments API
+  description: Normalized payment-processor data - payments, payouts, balances, transactions.
+  humanURL: https://docs.rutterapi.com/reference/get-connection
+  baseURL: https://production.rutterapi.com/versioned
   tags:
   - Payments
-  - Payouts
-  - Transactions
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.rutterapi.com/reference/list-payments
-  baseURL: https://production.rutterapi.com/versioned/payments
   properties:
-  - url: https://docs.rutterapi.com/docs/payments
-    type: Documentation
-  - url: https://docs.rutterapi.com/reference/list-payments
-    type: APIReference
-  - url: openapi/rutter-io-openapi.yml
-    type: OpenAPI
-  description: Normalized read access to payment processors - payments, payouts, balances,
-    disputes, and transactions across Stripe, PayPal, Square, and other processors.
+  - type: OpenAPI
+    url: openapi/rutter-io-payments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/introduction
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/get-connection
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/accounting
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-accounts
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/commerce
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-orders
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/payments
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-payments
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-webhooks
 - aid: rutter-io:rutter-io-webhooks-api
   name: Rutter Webhooks API
+  description: Register and manage webhook endpoints for sync and data events.
+  humanURL: https://docs.rutterapi.com/reference/get-connection
+  baseURL: https://production.rutterapi.com/versioned
   tags:
   - Webhooks
-  - Events
-  - Sync
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.rutterapi.com/reference/list-webhooks
-  baseURL: https://production.rutterapi.com/versioned
   properties:
-  - url: https://docs.rutterapi.com/docs/webhooks
-    type: Documentation
-  - url: https://docs.rutterapi.com/reference/list-webhooks
-    type: APIReference
-  - url: openapi/rutter-io-openapi.yml
-    type: OpenAPI
-  description: Register, list, and delete webhook endpoints and receive signed event
-    notifications when a connection finishes its initial sync or when underlying data
-    (orders, invoices, payments) is created or updated.
+  - type: OpenAPI
+    url: openapi/rutter-io-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/introduction
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/get-connection
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/accounting
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-accounts
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/commerce
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-orders
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/payments
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-payments
+  - type: Documentation
+    url: https://docs.rutterapi.com/docs/webhooks
+  - type: APIReference
+    url: https://docs.rutterapi.com/reference/list-webhooks
 common:
 - type: AgenticAccess
   url: agentic-access/rutter-io-agentic-access.yml
